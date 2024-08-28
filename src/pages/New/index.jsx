@@ -26,9 +26,6 @@ export function New() {
   const navigate = useNavigate();
 
   function handleAddLink(){
-    if(newLink == "") {
-      return alert("Escreva um link")
-    }
     setLinks(prevState => [...prevState, newLink])
     setNewLink("");
   }
@@ -38,9 +35,6 @@ export function New() {
   };
 
   function handleAddTag(){
-    if(newTag == "") {
-      return alert("Escreva uma tag")
-    }
     setTags(prevState => [...prevState, newTag]);
     setNewTag("");
   };
@@ -50,21 +44,6 @@ export function New() {
   }
 
   async function handleNewNote(){
-    if(!title){  
-      return alert("Digite o título da nota");
-    }
-  
-    if(!description){
-      setDescription("")
-    }
-    
-    if(links == ""){
-      return alert("Digite um link")
-    }
-
-    if(tags == ""){
-      return alert("Digite uma tag")
-    }
 
     if(newLink){    
       return alert("Você deixou um link no campo para adiconar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vazio.");
