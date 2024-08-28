@@ -1,3 +1,7 @@
+import {useState, useEffect} from 'react';
+import { useParams } from 'react-router-dom'
+import {api} from "../../services/api";
+
 import {Container, Links, Content} from "./styles"
 import {Button} from "../../components/Button"
 import {Header} from "../../components/Header"
@@ -6,31 +10,69 @@ import {Tag} from "../../components/Tag"
 import {ButtonText} from "../../components/ButtonText"
 
 export function Details() {
+  const [data, setData] = useState(null);
+
+  const params = useParams();
+
+  useEffect(() => {
+    async function fetchNote(){
+      const response = await api.get(`/notes/${params.id}`);
+      setData(response.data);
+    }
+
+    fetchNote();
+  }, []);
+
   return(
     <Container>
       <Header />
-      <main>
-        <Content>
+      {
+        data &&
+        <main>
+          <Content>
+            <ButtonText title="Excluir nota" />
 
-        <ButtonText title="Excluir nota" />
+            <h1>
+              {data.title}
+            </h1>
+            <p>
+              {data.description}
+            </p>
+            {
+              data.links &&
+              <Section title="Links úteis">
+                <Links>
+                  {
+                    data.links.map(link => (
+                      <li key={String(link.id)}>
+                        <a href={link.url} target='_blank'>
+                          {link.url}
+                        </a>
+                      </li>
+                    ))
+                  }
+                </Links>
+              </Section>
+            }
 
-        <h1>Introdução ao React</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta, illo, magni libero ea totam dolorem adipisci maxime ab praesentium deserunt, exercitationem eius. Quibusdam maiores repudiandae modi itaque recusandae, expedita explicabo.</p>
+            {
+              data.tags &&
+              <Section title="Marcadores">
+                {
+                  data.tags.map(tag => (
+                    <Tag 
+                      key={String(tag.id)}
+                      title={tag.name}
+                    />
+                  ))
+                }
+              </Section>
+            }
 
-        <Section title="Links úteis">
-          <Links>
-            <li><a href="#">Link 1</a></li>
-          </Links>
-        </Section>
-
-        <Section title="Marcadores">
-          <Tag title="express" />
-          <Tag title="nodejs" />
-        </Section>
-
-        <Button title="Voltar" />
-      </Content>
-      </main>
+            <Button title="Voltar" />
+          </Content>
+        </main>
+      }
     </Container>
   );
 };
